@@ -4,27 +4,40 @@ namespace ConversorNumerosRomanos
 {
     internal class Program
     {
+        static Dictionary<char, int> VALORES_LETRAS = new Dictionary<char, int> {
+            {'I', 1},
+            {'V', 5},
+            {'X', 10},
+            {'L', 50},
+            {'C', 100},
+            {'D', 500},
+            {'M', 1000}
+        };
         static void Main(string[] args)
         {
             Console.Write("Introduzca el numero romano a convertir: ");
-            char[] numeroRomano = Console.ReadLine().ToUpper().ToCharArray();
+            string numeroRomano = Console.ReadLine().ToUpper();
 
-            Console.WriteLine(ConvertirRomanoDecimal(numeroRomano));
+            if (esNumeroRomanoValido(numeroRomano))
+            {
+                Console.WriteLine(ConvertirRomanoDecimal(numeroRomano));
+            }
+            else
+            {
+                Console.WriteLine("El numero ingresado no es un numero romano valido");
+            }
         }
 
-        public static int ConvertirRomanoDecimal(char[] numeroRomano)
+        private static int ConvertirRomanoDecimal(string numeroRomano)
         {
             int numeroDecimal = 0;
             int valor = 0;
 
             for (int i = 0; i < numeroRomano.Length; i++)
             {
-                if ((valor = ValorLetra(numeroRomano[i])) == 0)
-                {
-                    return 0;
-                }
+                valor = VALORES_LETRAS[numeroRomano[i]];
 
-                if(i+1 < numeroRomano.Length && valor < ValorLetra(numeroRomano[i+1]))
+                if (i + 1 < numeroRomano.Length && valor < VALORES_LETRAS[numeroRomano[i + 1]])
                 {
                     numeroDecimal -= valor;
                 }
@@ -37,27 +50,27 @@ namespace ConversorNumerosRomanos
             return numeroDecimal;
         }
 
-        public static int ValorLetra(char letra)
+        private static bool esNumeroRomanoValido(string numeroRomano)
         {
-            switch(letra)
+            foreach(char letra in numeroRomano)
             {
-                case 'I':
-                    return 1;
-                case 'V':
-                    return 5;
-                case 'X':
-                    return 10;
-                case 'L':
-                    return 50;
-                case 'C':
-                    return 100;
-                case 'D':
-                    return 500;
-                case 'M':
-                    return 1000;
-                default:
-                    return 0;
+                if(!VALORES_LETRAS.ContainsKey(letra))
+                {
+                    return false;
+                }
             }
+
+            if (numeroRomano.Contains("IIII") || numeroRomano.Contains("XXXX") || numeroRomano.Contains("CCCC") || numeroRomano.Contains("MMMM"))
+            {
+                return false;
+            }
+
+            if (numeroRomano.Contains("VV") || numeroRomano.Contains("LL") || numeroRomano.Contains("DD"))
+            {
+                return false;
+            }
+
+            return true;
         }
     }
 }
