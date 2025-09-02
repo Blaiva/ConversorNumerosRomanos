@@ -9,29 +9,55 @@ namespace ConversorNumerosRomanos
             Console.Write("Introduzca el numero romano a convertir: ");
             char[] numeroRomano = Console.ReadLine().ToUpper().ToCharArray();
 
-            Console.WriteLine(ConvertirRomanoEntero(numeroRomano));
+            Console.WriteLine(ConvertirRomanoDecimal(numeroRomano));
         }
 
-        public static double ConvertirRomanoEntero(char[] numeroRomano)
+        public static int ConvertirRomanoDecimal(char[] numeroRomano)
         {
-            double numeroEntero = 0;
-            for(int i = 0; i < numeroRomano.Length; i++)
+            int numeroDecimal = 0;
+            int valor = 0;
+
+            for (int i = 0; i < numeroRomano.Length; i++)
             {
-                if(numeroRomano[i].Equals('I'))
+                if ((valor = ValorLetra(numeroRomano[i])) == 0)
                 {
-                    if (i + 1 < numeroRomano.Length && numeroRomano[i+1].Equals('V'))
-                    {
-                        numeroEntero += 4;
-                        i++;
-                        continue;
-                    }
-                    numeroEntero++;
+                    return 0;
+                }
+
+                if(i+1 < numeroRomano.Length && valor < ValorLetra(numeroRomano[i+1]))
+                {
+                    numeroDecimal -= valor;
+                }
+                else
+                {
+                    numeroDecimal += valor;
                 }
             }
 
-            return numeroEntero;
+            return numeroDecimal;
         }
 
-
+        public static int ValorLetra(char letra)
+        {
+            switch(letra)
+            {
+                case 'I':
+                    return 1;
+                case 'V':
+                    return 5;
+                case 'X':
+                    return 10;
+                case 'L':
+                    return 50;
+                case 'C':
+                    return 100;
+                case 'D':
+                    return 500;
+                case 'M':
+                    return 1000;
+                default:
+                    return 0;
+            }
+        }
     }
 }
